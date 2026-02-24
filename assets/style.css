@@ -1,0 +1,60 @@
+.gst-wrapper {
+    position: relative;
+    width: 100%;
+    height: 70vh;
+    overflow: hidden;
+    background: #fff;
+    font-family: 'Inter', sans-serif;
+}
+
+.gst-container {
+    display: flex;
+    align-items: center;
+    height: 100%;
+    padding: 0 25vw;
+    will-change: transform;
+}
+
+/* Central Horizontal Line */
+.gst-container::before {
+    content: '';
+    position: absolute;
+    top: 50%; left: 0; right: 0;
+    height: 1px; background: #e0e0e0;
+    z-index: 1;
+}
+
+.gst-item {
+    flex: 0 0 400px;
+    margin-right: 15vw;
+    position: relative;
+    z-index: 2;
+}
+
+.gst-dot {
+    width: 12px; height: 12px;
+    background: #000; border-radius: 50%;
+    position: absolute; top: 50%; transform: translateY(-50%);
+}
+
+.gst-content {
+    padding-left: 30px;
+    opacity: 0.2;
+    transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+}
+
+.gst-item.is-active .gst-content { opacity: 1; transform: scale(1.1); }
+
+
+.gst-item:nth-child(even) .gst-content { transform: translateY(-140px); }
+.gst-item:nth-child(odd) .gst-content { transform: translateY(70px); }
+
+.gst-progress-track {
+    position: absolute; bottom: 40px; left: 10%; width: 80%; height: 2px; background: #f0f0f0; z-index: 10;
+}
+
+#gst-bar { width: 0%; height: 100%; background: #000; transition: width 0.2s ease-out; }
+
+.gst-year { font-weight: 800; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 2px; }
+.gst-title { margin: 5px 0; font-size: 2rem; letter-spacing: -1px; }
+.gst-text { color: #666; font-size: 1rem; }
