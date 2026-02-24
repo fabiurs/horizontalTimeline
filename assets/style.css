@@ -7,6 +7,18 @@
     font-family: 'Inter', sans-serif;
 }
 
+.gst-bkg-lines{
+    background-image: repeating-linear-gradient(to right,#666 0px, #666 1px, transparent 1px, transparent 10px);
+    position: absolute; 
+    top: 50%; 
+    left: 50%; 
+    right: 0; 
+    bottom: 0;
+    transform: translate(-50%, -50%);
+    height: 20px;
+    width: 100%;
+}
+
 .gst-container {
     display: flex;
     align-items: center;
@@ -20,7 +32,8 @@
     content: '';
     position: absolute;
     top: 50%; left: 0; right: 0;
-    height: 1px; background: #e0e0e0;
+    height: 1px; 
+    /* background: #e0e0e0; */
     z-index: 1;
 }
 
@@ -39,21 +52,24 @@
 
 .gst-content {
     padding-left: 30px;
-    opacity: 0.2;
     transition: all 0.6s cubic-bezier(0.23, 1, 0.32, 1);
+    user-select: none;
 }
+/* 
+.gst-item.is-active .gst-content { opacity: 1; transform: scale(1.1); } */
 
-.gst-item.is-active .gst-content { opacity: 1; transform: scale(1.1); }
-
-
+/* 
 .gst-item:nth-child(even) .gst-content { transform: translateY(-140px); }
-.gst-item:nth-child(odd) .gst-content { transform: translateY(70px); }
-
+ */
+.gst-item .gst-content { transform: translateY(70px); }
 .gst-progress-track {
     position: absolute; bottom: 40px; left: 10%; width: 80%; height: 2px; background: #f0f0f0; z-index: 10;
 }
 
 #gst-bar { width: 0%; height: 100%; background: #000; transition: width 0.2s ease-out; }
+
+.gst-image { margin-bottom: 12px; }
+.gst-image img { display: block; max-width: 100%; height: auto; border-radius: 6px; }
 
 .gst-year { font-weight: 800; font-size: 0.75rem; color: #888; text-transform: uppercase; letter-spacing: 2px; }
 .gst-title { margin: 5px 0; font-size: 2rem; letter-spacing: -1px; }

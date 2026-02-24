@@ -1,7 +1,8 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const track = document.getElementById('gst-container');
-    const bar = document.getElementById('gst-bar');
-    if (!track) return;
+    const wrapper = document.querySelector('.gst-wrapper');
+    const track   = document.getElementById('gst-container');
+    const bar     = document.getElementById('gst-bar');
+    if (!track || !wrapper) return;
 
     let state = {
         target: 0,
@@ -11,15 +12,26 @@ document.addEventListener("DOMContentLoaded", () => {
         prevTarget: 0
     };
 
+    /* ── Viewport detection ──────────────────────────────── */
+    let isInViewport = false;
+
+    const observer = new IntersectionObserver(
+        ([entry]) => { isInViewport = entry.isIntersecting; },
+        { threshold: 0.1 }
+    );
+    observer.observe(wrapper);
+
     const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
 
-    // Scroll Input
+    /* ── Scroll Input (only when wrapper is in viewport) ── */
     window.addEventListener('wheel', (e) => {
+        if (!isInViewport) return;
+        e.preventDefault();
         state.target -= e.deltaY * 0.8;
-    }, { passive: true });
+    }, { passive: false });
 
-    // Drag Input
-    window.addEventListener('mousedown', (e) => {
+    /* ── Drag Input (only when starting inside wrapper) ─── */
+    wrapper.addEventListener('mousedown', (e) => {
         state.isDragging = true;
         state.startX = e.clientX;
         state.prevTarget = state.target;
@@ -33,12 +45,12 @@ document.addEventListener("DOMContentLoaded", () => {
 
     window.addEventListener('mouseup', () => state.isDragging = false);
 
-    // Core Loop
+    /* ── Core Loop ───────────────────────────────────────── */
     function frame() {
         const maxScroll = -(track.scrollWidth - window.innerWidth + (window.innerWidth * 0.4));
         state.target = Math.max(Math.min(state.target, 0), maxScroll);
-        
-        state.current = lerp(state.current, state.target, 0.08); // Inertia
+
+        state.current = lerp(state.current, state.target, 0.08);
         track.style.transform = `translateX(${state.current}px)`;
 
         // Update Progress Bar
