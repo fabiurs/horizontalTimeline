@@ -39,20 +39,33 @@ document.addEventListener("DOMContentLoaded", () => {
     const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
 
 
-    /* ── Drag Input (only when starting inside wrapper) ─── */
+    /* ── Drag Input (mouse & touch) ─── */
+    // Mouse
     wrapper.addEventListener('mousedown', (e) => {
         state.isDragging = true;
         state.startX = e.clientX;
         state.prevTarget = state.target;
     });
-
     window.addEventListener('mousemove', (e) => {
         if (!state.isDragging) return;
         const delta = e.clientX - state.startX;
         state.target = state.prevTarget + delta * 2;
     });
-
     window.addEventListener('mouseup', () => state.isDragging = false);
+
+    // Touch
+    wrapper.addEventListener('touchstart', (e) => {
+        if (e.touches.length !== 1) return;
+        state.isDragging = true;
+        state.startX = e.touches[0].clientX;
+        state.prevTarget = state.target;
+    });
+    window.addEventListener('touchmove', (e) => {
+        if (!state.isDragging || e.touches.length !== 1) return;
+        const delta = e.touches[0].clientX - state.startX;
+        state.target = state.prevTarget + delta * 2;
+    });
+    window.addEventListener('touchend', () => state.isDragging = false);
 
     /* ── Core Loop ───────────────────────────────────────── */
     function frame() {

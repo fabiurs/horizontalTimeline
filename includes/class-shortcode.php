@@ -22,27 +22,6 @@ class GST_Shortcode {
 
         $data = get_option('gst_timeline_data', []);
 
-        $style_settings = get_option('gst_timeline_style', []);
-        $year_style = '';
-        $title_style = '';
-        $text_style = '';
-        if (is_array($style_settings)) {
-            $year_style = sprintf('color:%s;font-size:%s;font-weight:%s;',
-                esc_attr($style_settings['year_color'] ?? '#585058'),
-                esc_attr($style_settings['year_size'] ?? '1.05rem'),
-                esc_attr($style_settings['year_weight'] ?? '900')
-            );
-            $title_style = sprintf('color:%s;font-size:%s;font-weight:%s;',
-                esc_attr($style_settings['title_color'] ?? '#000'),
-                esc_attr($style_settings['title_size'] ?? '40px'),
-                esc_attr($style_settings['title_weight'] ?? '900')
-            );
-            $text_style = sprintf('color:%s;font-size:%s;font-weight:%s;',
-                esc_attr($style_settings['text_color'] ?? '#222'),
-                esc_attr($style_settings['text_size'] ?? '1.1rem'),
-                esc_attr($style_settings['text_weight'] ?? '400')
-            );
-        }
         ob_start(); ?>
         <div class="horizontal-timeline-wrapper">
             <button type="button" class="horizontal-timeline-toggle-all" style="margin: 10px 0 20px 20px;">Detalii</button>
@@ -55,8 +34,8 @@ class GST_Shortcode {
                         <div class="horizontal-timeline-item">
                             <div class="horizontal-timeline-dot"></div>
                             <div class="horizontal-timeline-content">
-                                <span class="horizontal-timeline-year" style="<?php echo $year_style; ?>"><?php echo esc_html($item['year']); ?></span>
-                                <h3 class="horizontal-timeline-title" style="<?php echo $title_style; ?>"><?php echo esc_html($item['title']); ?></h3>
+                                <span class="horizontal-timeline-year"><?php echo esc_html($item['year']); ?></span>
+                                <h3 class="horizontal-timeline-title"><?php echo esc_html($item['title']); ?></h3>
                                 <?php
                                     $img_id = absint($item['image'] ?? 0);
                                     if ($img_id) {
@@ -66,7 +45,7 @@ class GST_Shortcode {
                                         }
                                     }
                                 ?>
-                                <p class="horizontal-timeline-text" style="<?php echo $text_style; ?>"><?php echo esc_html($item['desc']); ?></p>
+                                <div class="horizontal-timeline-text"><?php echo $item['desc']; ?></div>
                             </div>
                         </div>
                     <?php endforeach; ?>

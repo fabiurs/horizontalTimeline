@@ -29,6 +29,7 @@
 .horizontal-timeline-wrapper {
     position: relative;
     width: 100%;
+    overflow: hidden;
 }
 
 .horizontal-timeline-bkg-lines{
@@ -108,29 +109,4 @@
 }
 .horizontal-timeline-wrapper:active {
     cursor: grabbing;
-}
-
-.horizontal-timeline-year { 
-    font-size: 1.05rem;
-    color: #585058;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    font-family: 'FOCO';
-    font-weight: 900;
-}
-
-.horizontal-timeline-title {     
-    letter-spacing: -1px;
-    font-family: "Foco", Sans-serif;
-    font-size: 40px;
-    font-weight: 900;
-    color: #483041; 
-}
-
-.horizontal-timeline-text { 
-    text-align: left;
-    font-size: 17px;
-    font-weight: 400;
-    color: #483041;
-    font-family: Mac;
 }

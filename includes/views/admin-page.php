@@ -52,8 +52,22 @@ if (!defined('ABSPATH')) exit;
                                value="<?php echo esc_attr($row['title']); ?>" placeholder="Event title" required>
 
                         <label>Description</label>
-                        <textarea name="gst_timeline[<?php echo $i; ?>][desc]"
-                                  placeholder="Brief description of this event…"><?php echo esc_textarea($row['desc'] ?? ''); ?></textarea>
+                        <?php
+                        $desc_content = $row['desc'] ?? '';
+                        $editor_id = 'gst_timeline_desc_' . $i;
+                        wp_editor(
+                            $desc_content,
+                            $editor_id,
+                            [
+                                'textarea_name' => "gst_timeline[{$i}][desc]",
+                                'media_buttons' => false,
+                                'textarea_rows' => 6,
+                                'teeny' => true,
+                                'quicktags' => true,
+                                'editor_class' => 'horizontal-timeline-richtext',
+                            ]
+                        );
+                        ?>
 
                         <label>Image</label>
                         <div class="horizontal-timeline-image-field">
@@ -78,24 +92,6 @@ if (!defined('ABSPATH')) exit;
                 <?php endforeach; ?>
             <?php endif; ?>
         </div>
-    </form>
-
-    <form method="post" id="horizontal-timeline-style-form" style="margin-top:32px;">
-        <?php wp_nonce_field('gst_timeline_style_save', 'gst_timeline_style_nonce'); ?>
-        <h2>Timeline Style Settings</h2>
-        <table class="form-table">
-            <tr><th>Year Color</th><td><input type="color" name="year_color" value="<?php echo esc_attr($style_settings['year_color']); ?>"> </td></tr>
-            <tr><th>Year Size</th><td><input type="text" name="year_size" value="<?php echo esc_attr($style_settings['year_size']); ?>"> (e.g. 1.05rem)</td></tr>
-            <tr><th>Year Weight</th><td><input type="text" name="year_weight" value="<?php echo esc_attr($style_settings['year_weight']); ?>"> (e.g. 900)</td></tr>
-            <tr><th>Title Color</th><td><input type="color" name="title_color" value="<?php echo esc_attr($style_settings['title_color']); ?>"> </td></tr>
-            <tr><th>Title Size</th><td><input type="text" name="title_size" value="<?php echo esc_attr($style_settings['title_size']); ?>"> (e.g. 40px)</td></tr>
-            <tr><th>Title Weight</th><td><input type="text" name="title_weight" value="<?php echo esc_attr($style_settings['title_weight']); ?>"> (e.g. 900)</td></tr>
-            <tr><th>Text Color</th><td><input type="color" name="text_color" value="<?php echo esc_attr($style_settings['text_color']); ?>"> </td></tr>
-            <tr><th>Text Size</th><td><input type="text" name="text_size" value="<?php echo esc_attr($style_settings['text_size']); ?>"> (e.g. 1.1rem)</td></tr>
-            <tr><th>Text Weight</th><td><input type="text" name="text_weight" value="<?php echo esc_attr($style_settings['text_weight']); ?>"> (e.g. 400)</td></tr>
-        </table>
-        <input type="submit" class="button button-primary" value="Save Style Settings">
-    </form>
 
         <div class="horizontal-timeline-empty-state" id="horizontal-timeline-empty" style="<?php echo !empty($data) ? 'display:none' : ''; ?>">
             <span class="dashicons dashicons-clock"></span>
