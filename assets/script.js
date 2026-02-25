@@ -1,7 +1,6 @@
 document.addEventListener("DOMContentLoaded", () => {
     const wrapper = document.querySelector('.horizontal-timeline-wrapper');
     const track   = document.getElementById('horizontal-timeline-container');
-    const bar     = document.getElementById('horizontal-timeline-bar');
     if (!track || !wrapper) return;
 
     let state = {
@@ -46,10 +45,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
         state.current = lerp(state.current, state.target, 0.08);
         track.style.transform = `translateX(${state.current}px)`;
-
-        // Update Progress Bar
-        const progress = (state.current / maxScroll) * 100;
-        bar.style.width = `${progress}%`;
 
         // Focus Effect
         const items = document.querySelectorAll('.horizontal-timeline-item');

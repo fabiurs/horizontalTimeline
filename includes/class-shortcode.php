@@ -24,9 +24,6 @@ class GST_Shortcode {
 
         ob_start(); ?>
         <div class="horizontal-timeline-wrapper">
-            <div class="horizontal-timeline-progress-track">
-                <div id="horizontal-timeline-bar"></div>
-            </div>
             <div class="horizontal-timeline-container-lines">
                 <span class="horizontal-timeline-bkg-lines"></span>
             </div>

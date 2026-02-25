@@ -62,12 +62,6 @@
 .horizontal-timeline-item:nth-child(even) .horizontal-timeline-content { transform: translateY(-140px); }
  */
 .horizontal-timeline-item .horizontal-timeline-content { transform: translateY(70px); }
-.horizontal-timeline-progress-track {
-    position: absolute; bottom: 40px; left: 10%; width: 80%; height: 2px; background: #f0f0f0; z-index: 10;
-}
-
-#horizontal-timeline-bar { width: 0%; height: 100%; background: #000; transition: width 0.2s ease-out; }
-
 .horizontal-timeline-image { margin-bottom: 12px; }
 .horizontal-timeline-image img { display: block; max-width: 100%; height: auto; border-radius: 6px; }
 
