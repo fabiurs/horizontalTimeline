@@ -1,6 +1,6 @@
 <?php
 /**
- * Shortcode rendering for [smooth_timeline].
+ * Shortcode rendering for [horizontal_timeline].
  */
 
 if (!defined('ABSPATH')) exit;
@@ -18,7 +18,6 @@ class GST_Shortcode {
      * Render the timeline shortcode.
      */
     public static function render($atts) {
-        wp_enqueue_style('horizontal-timeline-css');
         wp_enqueue_script('horizontal-timeline-js');
 
         $data = get_option('gst_timeline_data', []);

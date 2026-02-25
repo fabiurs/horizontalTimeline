@@ -15,8 +15,9 @@ require_once plugin_dir_path(__FILE__) . 'includes/class-admin.php';
 class HorizontalSmoothTimeline {
 
     public function __construct() {
-        // Register front-end assets
+        // Register and enqueue front-end assets
         add_action('wp_enqueue_scripts', [$this, 'register_frontend_assets']);
+        add_action('wp_enqueue_scripts', [$this, 'enqueue_frontend_style']);
 
         // Shortcode
         GST_Shortcode::init();
@@ -29,11 +30,17 @@ class HorizontalSmoothTimeline {
 
     /**
      * Register (not enqueue) front-end CSS & JS.
-     * They are enqueued on-demand inside the shortcode.
      */
     public function register_frontend_assets() {
         wp_register_style('horizontal-timeline-css',  plugins_url('assets/style.css',  __FILE__), [], '1.3');
         wp_register_script('horizontal-timeline-js',  plugins_url('assets/script.js',  __FILE__), [], '1.3', true);
+    }
+
+    /**
+     * Always enqueue the frontend style (CSS).
+     */
+    public function enqueue_frontend_style() {
+        wp_enqueue_style('horizontal-timeline-css');
     }
 }
 
