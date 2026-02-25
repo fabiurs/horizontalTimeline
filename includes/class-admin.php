@@ -6,6 +6,37 @@
 if (!defined('ABSPATH')) exit;
 
 class GST_Admin {
+    /**
+     * Add settings for year, title, and text styles.
+     */
+    private static function get_style_settings() {
+        $defaults = [
+            'year_color' => '#585058',
+            'year_size' => '1.05rem',
+            'year_weight' => '900',
+            'title_color' => '#000',
+            'title_size' => '40px',
+            'title_weight' => '900',
+            'text_color' => '#222',
+            'text_size' => '1.1rem',
+            'text_weight' => '400',
+        ];
+        $saved = get_option('gst_timeline_style', []);
+        return array_merge($defaults, is_array($saved) ? $saved : []);
+    }
+
+    private static function save_style_settings() {
+        $fields = [
+            'year_color', 'year_size', 'year_weight',
+            'title_color', 'title_size', 'title_weight',
+            'text_color', 'text_size', 'text_weight',
+        ];
+        $settings = [];
+        foreach ($fields as $f) {
+            $settings[$f] = sanitize_text_field($_POST[$f] ?? '');
+        }
+        update_option('gst_timeline_style', $settings);
+    }
 
     /**
      * Hook into WordPress admin.
@@ -62,12 +93,18 @@ class GST_Admin {
 
         $notice = '';
 
-        // Handle save
+        // Handle timeline save
         if (isset($_POST['gst_timeline_nonce']) && wp_verify_nonce($_POST['gst_timeline_nonce'], 'gst_timeline_save')) {
             $notice = self::handle_save();
         }
+        // Handle style settings save
+        if (isset($_POST['gst_timeline_style_nonce']) && wp_verify_nonce($_POST['gst_timeline_style_nonce'], 'gst_timeline_style_save')) {
+            self::save_style_settings();
+            $notice .= '<div class="notice notice-success is-dismissible"><p><strong>Style settings saved.</strong></p></div>';
+        }
 
         $data = get_option('gst_timeline_data', []);
+        $style_settings = self::get_style_settings();
 
         // Load the view template
         include plugin_dir_path(__FILE__) . '../includes/views/admin-page.php';

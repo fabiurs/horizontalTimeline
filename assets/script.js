@@ -5,6 +5,7 @@ document.addEventListener("DOMContentLoaded", () => {
         if (toggleBtn) {
             toggleBtn.addEventListener('click', () => {
                 accordionOpen = !accordionOpen;
+                toggleBtn.classList.toggle('toggled', accordionOpen);
                 document.querySelectorAll('.horizontal-timeline-text').forEach(el => {
                     if (accordionOpen) {
                         el.classList.add('horizontal-timeline-text-visible');
