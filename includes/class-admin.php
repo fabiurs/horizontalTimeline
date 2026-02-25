@@ -74,13 +74,13 @@ class GST_Admin {
             'horizontal-timeline-admin-css',
             plugins_url('assets/admin-style.css', dirname(__FILE__)),
             [],
-            '1.3'
+            '1.4'
         );
         wp_enqueue_script(
             'horizontal-timeline-admin-js',
             plugins_url('assets/admin-script.js', dirname(__FILE__)),
             ['jquery'],
-            '1.3',
+            '1.4',
             true
         );
     }

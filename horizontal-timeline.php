@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Horizontal Timeline
  * Description: A premium horizontal scroll timeline with inertia and drag support.
- * Version: 1.3
+ * Version: 1.4
  * Author: Fabian Ursache
  */
 
@@ -32,8 +32,8 @@ class HorizontalSmoothTimeline {
      * Register (not enqueue) front-end CSS & JS.
      */
     public function register_frontend_assets() {
-        wp_register_style('horizontal-timeline-css',  plugins_url('assets/style.css',  __FILE__), [], '1.3');
-        wp_register_script('horizontal-timeline-js',  plugins_url('assets/script.js',  __FILE__), [], '1.3', true);
+        wp_register_style('horizontal-timeline-css',  plugins_url('assets/style.css',  __FILE__), [], '1.4');
+        wp_register_script('horizontal-timeline-js',  plugins_url('assets/script.js',  __FILE__), [], '1.4', true);
     }
 
     /**
