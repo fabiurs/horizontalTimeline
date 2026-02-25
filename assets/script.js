@@ -1,7 +1,7 @@
 document.addEventListener("DOMContentLoaded", () => {
-    const wrapper = document.querySelector('.gst-wrapper');
-    const track   = document.getElementById('gst-container');
-    const bar     = document.getElementById('gst-bar');
+    const wrapper = document.querySelector('.horizontal-timeline-wrapper');
+    const track   = document.getElementById('horizontal-timeline-container');
+    const bar     = document.getElementById('horizontal-timeline-bar');
     if (!track || !wrapper) return;
 
     let state = {
@@ -23,12 +23,6 @@ document.addEventListener("DOMContentLoaded", () => {
 
     const lerp = (start, end, amt) => (1 - amt) * start + amt * end;
 
-    /* ── Scroll Input (only when wrapper is in viewport) ── */
-    window.addEventListener('wheel', (e) => {
-        if (!isInViewport) return;
-        e.preventDefault();
-        state.target -= e.deltaY * 0.8;
-    }, { passive: false });
 
     /* ── Drag Input (only when starting inside wrapper) ─── */
     wrapper.addEventListener('mousedown', (e) => {
@@ -58,7 +52,7 @@ document.addEventListener("DOMContentLoaded", () => {
         bar.style.width = `${progress}%`;
 
         // Focus Effect
-        const items = document.querySelectorAll('.gst-item');
+        const items = document.querySelectorAll('.horizontal-timeline-item');
         items.forEach(item => {
             const center = window.innerWidth / 2;
             const pos = item.getBoundingClientRect().left;

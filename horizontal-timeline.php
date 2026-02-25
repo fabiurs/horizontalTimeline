@@ -32,8 +32,8 @@ class HorizontalSmoothTimeline {
      * They are enqueued on-demand inside the shortcode.
      */
     public function register_frontend_assets() {
-        wp_register_style('gst-css',  plugins_url('assets/style.css',  __FILE__), [], '1.3');
-        wp_register_script('gst-js',  plugins_url('assets/script.js',  __FILE__), [], '1.3', true);
+        wp_register_style('horizontal-timeline-css',  plugins_url('assets/style.css',  __FILE__), [], '1.3');
+        wp_register_script('horizontal-timeline-js',  plugins_url('assets/script.js',  __FILE__), [], '1.3', true);
     }
 }
 

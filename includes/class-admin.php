@@ -25,7 +25,7 @@ class GST_Admin {
             'manage_options',
             'gst_timeline_admin',
             [__CLASS__, 'render_page'],
-            'dashicons-clock',
+            'dashicons-calendar',
             20
         );
     }
@@ -40,13 +40,13 @@ class GST_Admin {
         wp_enqueue_media();
 
         wp_enqueue_style(
-            'gst-admin-css',
+            'horizontal-timeline-admin-css',
             plugins_url('assets/admin-style.css', dirname(__FILE__)),
             [],
             '1.3'
         );
         wp_enqueue_script(
-            'gst-admin-js',
+            'horizontal-timeline-admin-js',
             plugins_url('assets/admin-script.js', dirname(__FILE__)),
             ['jquery'],
             '1.3',
