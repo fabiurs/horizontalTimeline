@@ -1,4 +1,19 @@
 document.addEventListener("DOMContentLoaded", () => {
+        // Accordion toggle button logic (only hide/show text)
+        const toggleBtn = document.querySelector('.horizontal-timeline-toggle-all');
+        let accordionOpen = false;
+        if (toggleBtn) {
+            toggleBtn.addEventListener('click', () => {
+                accordionOpen = !accordionOpen;
+                document.querySelectorAll('.horizontal-timeline-text').forEach(el => {
+                    if (accordionOpen) {
+                        el.classList.add('horizontal-timeline-text-visible');
+                    } else {
+                        el.classList.remove('horizontal-timeline-text-visible');
+                    }
+                });
+            });
+        }
     const wrapper = document.querySelector('.horizontal-timeline-wrapper');
     const track   = document.getElementById('horizontal-timeline-container');
     if (!track || !wrapper) return;

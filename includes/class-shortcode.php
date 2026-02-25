@@ -24,6 +24,7 @@ class GST_Shortcode {
 
         ob_start(); ?>
         <div class="horizontal-timeline-wrapper">
+            <button type="button" class="horizontal-timeline-toggle-all" style="margin: 10px 0 20px 20px;">Detalii</button>
             <div class="horizontal-timeline-container-lines">
                 <span class="horizontal-timeline-bkg-lines"></span>
             </div>
@@ -33,6 +34,8 @@ class GST_Shortcode {
                         <div class="horizontal-timeline-item">
                             <div class="horizontal-timeline-dot"></div>
                             <div class="horizontal-timeline-content">
+                                <span class="horizontal-timeline-year"><?php echo esc_html($item['year']); ?></span>
+                                <h3 class="horizontal-timeline-title"><?php echo esc_html($item['title']); ?></h3>
                                 <?php
                                     $img_id = absint($item['image'] ?? 0);
                                     if ($img_id) {
@@ -42,8 +45,6 @@ class GST_Shortcode {
                                         }
                                     }
                                 ?>
-                                <span class="horizontal-timeline-year"><?php echo esc_html($item['year']); ?></span>
-                                <h3 class="horizontal-timeline-title"><?php echo esc_html($item['title']); ?></h3>
                                 <p class="horizontal-timeline-text"><?php echo esc_html($item['desc']); ?></p>
                             </div>
                         </div>
