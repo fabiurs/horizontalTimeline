@@ -20,6 +20,13 @@ class GST_Shortcode {
     public static function render($atts) {
         wp_enqueue_script('horizontal-timeline-js');
 
+        // Pass sound URL to frontend
+        $sound_id  = absint(get_option('gst_timeline_sound', 0));
+        $sound_url = $sound_id ? wp_get_attachment_url($sound_id) : '';
+        wp_localize_script('horizontal-timeline-js', 'horizontalTimelineData', [
+            'soundUrl' => $sound_url
+        ]);
+
         $data = get_option('gst_timeline_data', []);
 
         ob_start(); ?>

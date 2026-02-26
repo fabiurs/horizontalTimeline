@@ -98,6 +98,27 @@ if (!defined('ABSPATH')) exit;
             <p>No timeline events yet. Click <strong>Add Event</strong> to get started.</p>
         </div>
 
+        <div class="horizontal-timeline-sound-section" style="background: #fff; padding: 20px; margin: 20px 0; border: 1px solid #ddd; border-radius: 4px;">
+            <h3 style="margin-top: 0;">Scroll Sound Effect</h3>
+            <?php
+                $sound_id  = absint(get_option('gst_timeline_sound', 0));
+                $sound_url = $sound_id ? wp_get_attachment_url($sound_id) : '';
+                $sound_filename = $sound_url ? basename($sound_url) : '';
+            ?>
+            <input type="hidden" name="gst_timeline_sound" id="horizontal-timeline-sound-id" value="<?php echo $sound_id; ?>">
+            <div class="horizontal-timeline-sound-preview" style="margin: 10px 0;">
+                <?php if ($sound_url): ?>
+                    <p>Selected Sound: <strong><?php echo esc_html($sound_filename); ?></strong></p>
+                <?php else: ?>
+                    <p>No sound selected.</p>
+                <?php endif; ?>
+            </div>
+            <button type="button" class="button horizontal-timeline-upload-sound-btn">
+                <span class="dashicons dashicons-format-audio" style="vertical-align:middle;margin-right:4px;font-size:16px;width:16px;height:16px;"></span><?php echo $sound_url ? 'Change' : 'Select'; ?> Sound
+            </button>
+            <button type="button" class="button horizontal-timeline-remove-sound-btn" style="<?php echo $sound_url ? '' : 'display:none'; ?>">&times; Remove</button>
+        </div>
+
         <div class="horizontal-timeline-toolbar">
             <button type="button" class="button" id="horizontal-timeline-add-row">
                 <span class="dashicons dashicons-plus-alt2"

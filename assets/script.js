@@ -41,6 +41,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ── Drag Input (mouse & touch) ─── */
     // Mouse
+    let lastDragSoundTime = 0;
     wrapper.addEventListener('mousedown', (e) => {
         state.isDragging = true;
         state.startX = e.clientX;
@@ -50,6 +51,14 @@ document.addEventListener("DOMContentLoaded", () => {
         if (!state.isDragging) return;
         const delta = e.clientX - state.startX;
         state.target = state.prevTarget + delta * 2;
+        
+        // Play sound on drag (throttled to prevent overwhelming audio)
+        const now = Date.now();
+        if (scrollSound && Math.abs(delta) > 10 && now - lastDragSoundTime > 100) {
+            scrollSound.currentTime = 0;
+            scrollSound.play().catch(() => {});
+            lastDragSoundTime = now;
+        }
     });
     window.addEventListener('mouseup', () => state.isDragging = false);
 
@@ -94,9 +103,22 @@ document.addEventListener("DOMContentLoaded", () => {
     }
     frame();
 
+    // Load the sound file from WordPress settings
+    let scrollSound = null;
+    if (typeof horizontalTimelineData !== 'undefined' && horizontalTimelineData.soundUrl) {
+        scrollSound = new Audio(horizontalTimelineData.soundUrl);
+    }
+
     // Mouse wheel scroll: move timeline horizontally when in viewport
     wrapper.addEventListener('wheel', (e) => {
         if (!isInViewport) return;
+
+        // Play the sound if available
+        if (scrollSound) {
+            scrollSound.currentTime = 0; // Reset to the start
+            scrollSound.play().catch(() => {}); // Ignore errors if autoplay is blocked
+        }
+
         // Only scroll horizontally
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
             e.preventDefault();

@@ -95,6 +95,11 @@ class GST_Admin {
 
         update_option('gst_timeline_data', $clean);
 
+        // Handle sound save
+        if (isset($_POST['gst_timeline_sound'])) {
+            update_option('gst_timeline_sound', absint($_POST['gst_timeline_sound']));
+        }
+
         return '<div class="notice notice-success is-dismissible"><p><strong>Timeline saved.</strong> '
             . count($clean) . ' event(s) stored.</p></div>';
     }

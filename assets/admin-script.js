@@ -204,6 +204,52 @@
         $(this).hide();
     });
 
+    /* ── Sound Uploader ─────────────────────────────────── */
+
+    $('.horizontal-timeline-upload-sound-btn').on('click', function (e) {
+        e.preventDefault();
+
+        const $button = $(this);
+        const $soundField = $('#horizontal-timeline-sound-id');
+        const $preview = $('.horizontal-timeline-sound-preview');
+        const $removeBtn = $('.horizontal-timeline-remove-sound-btn');
+
+        const mediaUploader = wp.media({
+            title: 'Select Sound',
+            button: {
+                text: 'Use this sound'
+            },
+            library: {
+                type: 'audio'
+            },
+            multiple: false
+        });
+
+        mediaUploader.on('select', function () {
+            const attachment = mediaUploader.state().get('selection').first().toJSON();
+            $soundField.val(attachment.id);
+            $preview.html('<p>Selected Sound: <strong>' + attachment.filename + '</strong></p>');
+            $button.html('<span class="dashicons dashicons-format-audio" style="vertical-align:middle;margin-right:4px;font-size:16px;width:16px;height:16px;"></span>Change Sound');
+            $removeBtn.show();
+        });
+
+        mediaUploader.open();
+    });
+
+    $('.horizontal-timeline-remove-sound-btn').on('click', function (e) {
+        e.preventDefault();
+
+        const $button = $(this);
+        const $soundField = $('#horizontal-timeline-sound-id');
+        const $preview = $('.horizontal-timeline-sound-preview');
+        const $uploadBtn = $('.horizontal-timeline-upload-sound-btn');
+
+        $soundField.val('0');
+        $preview.html('<p>No sound selected.</p>');
+        $uploadBtn.html('<span class="dashicons dashicons-format-audio" style="vertical-align:middle;margin-right:4px;font-size:16px;width:16px;height:16px;"></span>Select Sound');
+        $button.hide();
+    });
+
     /* ── Keyboard: Ctrl+S to save ────────────────────────── */
 
     $(document).on('keydown', function (e) {
