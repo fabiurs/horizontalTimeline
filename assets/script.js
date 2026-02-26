@@ -67,6 +67,12 @@ document.addEventListener("DOMContentLoaded", () => {
     });
     window.addEventListener('touchend', () => state.isDragging = false);
 
+    // Prevent dragging of images inside the timeline
+    const images = document.querySelectorAll('.horizontal-timeline-image img');
+    images.forEach(img => {
+        img.addEventListener('dragstart', (e) => e.preventDefault());
+    });
+
     /* ── Core Loop ───────────────────────────────────────── */
     function frame() {
         const maxScroll = -(track.scrollWidth - window.innerWidth + (window.innerWidth * 0.4));
@@ -87,4 +93,17 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(frame);
     }
     frame();
+
+    // Mouse wheel scroll: move timeline horizontally when in viewport
+    wrapper.addEventListener('wheel', (e) => {
+        if (!isInViewport) return;
+        // Only scroll horizontally
+        if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
+            e.preventDefault();
+            state.target -= e.deltaY * 1.2; // Adjust multiplier for sensitivity
+        } else if (e.deltaX !== 0) {
+            e.preventDefault();
+            state.target -= e.deltaX * 1.2;
+        }
+    }, { passive: false });
 });
