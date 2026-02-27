@@ -55,7 +55,7 @@ document.addEventListener("DOMContentLoaded", () => {
         lastDragX = e.clientX;
         state.target = state.prevTarget + delta * 2;
 
-        if (Math.abs(frameDelta) > 2) playScrollSound(frameDelta * 8);
+        if (Math.abs(frameDelta) > 2) ; // sound handled in frame loop
     });
     window.addEventListener('mouseup', () => state.isDragging = false);
 
@@ -80,12 +80,49 @@ document.addEventListener("DOMContentLoaded", () => {
     });
 
     /* ── Core Loop ───────────────────────────────────────── */
+
+    // ── Sound pool for distance-based playback ────────
+    const SOUND_DISTANCE = 15;           // play sound every 15px of movement
+    const POOL_SIZE = 4;
+    let soundPool = [];
+    let soundIndex = 0;
+    let lastSoundPosition = 0;
+
+    if (typeof horizontalTimelineData !== 'undefined' && horizontalTimelineData.soundUrl) {
+        for (let i = 0; i < POOL_SIZE; i++) {
+            const a = new Audio(horizontalTimelineData.soundUrl);
+            a.volume = 0;
+            soundPool.push(a);
+        }
+    }
+
+    let lastSoundTime = 0;
+
+    function playScrollSound() {
+        if (soundPool.length === 0) return;
+        const now = Date.now();
+        if (now - lastSoundTime < 150) return;
+
+        const snd = soundPool[soundIndex % POOL_SIZE];
+        snd.volume = 1;
+        snd.currentTime = 0;
+        snd.play().catch(() => {});
+        soundIndex++;
+        lastSoundTime = now;
+    }
+
     function frame() {
         const maxScroll = -(track.scrollWidth - window.innerWidth + (window.innerWidth * 0.4));
         state.target = Math.max(Math.min(state.target, 0), maxScroll);
 
         state.current = lerp(state.current, state.target, 0.08);
         track.style.transform = `translateX(${state.current}px)`;
+
+        // Play sound every 15px of actual movement
+        if (Math.abs(state.current - lastSoundPosition) >= SOUND_DISTANCE) {
+            playScrollSound();
+            lastSoundPosition = state.current;
+        }
 
         // // Focus Effect
         // const items = document.querySelectorAll('.horizontal-timeline-item');
@@ -99,42 +136,6 @@ document.addEventListener("DOMContentLoaded", () => {
         requestAnimationFrame(frame);
     }
     frame();
-
-    // ── Sound pool for smooth overlapping playback ────────
-    const SOUND_DURATION = 200;          // 0.2s in ms
-    const MIN_COOLDOWN = 80;             // fastest repetition (very fast scroll)
-    const MAX_COOLDOWN = 300;            // slowest repetition (gentle scroll)
-    const POOL_SIZE = 4;
-    let soundPool = [];
-    let soundIndex = 0;
-    let lastSoundTime = 0;
-
-    if (typeof horizontalTimelineData !== 'undefined' && horizontalTimelineData.soundUrl) {
-        for (let i = 0; i < POOL_SIZE; i++) {
-            const a = new Audio(horizontalTimelineData.soundUrl);
-            a.volume = 0;
-            soundPool.push(a);
-        }
-    }
-
-    function playScrollSound(speed) {
-        if (soundPool.length === 0) return;
-        const now = Date.now();
-
-        // Map speed to cooldown: faster movement → shorter cooldown
-        const absSpeed = Math.abs(speed);
-        const t = Math.min(1, absSpeed / 100);  // normalize: 0 = still, 1 = fast
-        const cooldown = MAX_COOLDOWN - t * (MAX_COOLDOWN - MIN_COOLDOWN);
-
-        if (now - lastSoundTime < cooldown) return;
-
-        const snd = soundPool[soundIndex % POOL_SIZE];
-        snd.volume = 1;
-        snd.currentTime = 0;
-        snd.play().catch(() => {});
-        soundIndex++;
-        lastSoundTime = now;
-    }
 
     // Mouse wheel scroll: move timeline horizontally when in viewport
     wrapper.addEventListener('wheel', (e) => {
@@ -151,6 +152,6 @@ document.addEventListener("DOMContentLoaded", () => {
             state.target -= scrollDelta * 1.2;
         }
 
-        if (Math.abs(scrollDelta) > 2) playScrollSound(scrollDelta);
+        if (Math.abs(scrollDelta) > 2) ; // sound handled in frame loop
     }, { passive: false });
 });
