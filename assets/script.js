@@ -101,7 +101,7 @@ document.addEventListener("DOMContentLoaded", () => {
     function playScrollSound() {
         if (soundPool.length === 0) return;
         const now = Date.now();
-        if (now - lastSoundTime < 150) return;
+        if (now - lastSoundTime < 100) return;
 
         const snd = soundPool[soundIndex % POOL_SIZE];
         snd.volume = 1;
