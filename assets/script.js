@@ -41,24 +41,21 @@ document.addEventListener("DOMContentLoaded", () => {
 
     /* ── Drag Input (mouse & touch) ─── */
     // Mouse
-    let lastDragSoundTime = 0;
+    let lastDragX = 0;
     wrapper.addEventListener('mousedown', (e) => {
         state.isDragging = true;
         state.startX = e.clientX;
+        lastDragX = e.clientX;
         state.prevTarget = state.target;
     });
     window.addEventListener('mousemove', (e) => {
         if (!state.isDragging) return;
         const delta = e.clientX - state.startX;
+        const frameDelta = e.clientX - lastDragX;
+        lastDragX = e.clientX;
         state.target = state.prevTarget + delta * 2;
-        
-        // Play sound on drag (throttled to prevent overwhelming audio)
-        const now = Date.now();
-        if (scrollSound && Math.abs(delta) > 10 && now - lastDragSoundTime > 100) {
-            scrollSound.currentTime = 0;
-            scrollSound.play().catch(() => {});
-            lastDragSoundTime = now;
-        }
+
+        if (Math.abs(frameDelta) > 2) playScrollSound(frameDelta * 8);
     });
     window.addEventListener('mouseup', () => state.isDragging = false);
 
@@ -90,42 +87,70 @@ document.addEventListener("DOMContentLoaded", () => {
         state.current = lerp(state.current, state.target, 0.08);
         track.style.transform = `translateX(${state.current}px)`;
 
-        // Focus Effect
-        const items = document.querySelectorAll('.horizontal-timeline-item');
-        items.forEach(item => {
-            const center = window.innerWidth / 2;
-            const pos = item.getBoundingClientRect().left;
-            if (pos > center - 250 && pos < center + 250) item.classList.add('is-active');
-            else item.classList.remove('is-active');
-        });
+        // // Focus Effect
+        // const items = document.querySelectorAll('.horizontal-timeline-item');
+        // items.forEach(item => {
+        //     const center = window.innerWidth / 2;
+        //     const pos = item.getBoundingClientRect().left;
+        //     if (pos > center - 250 && pos < center + 250) item.classList.add('is-active');
+        //     else item.classList.remove('is-active');
+        // });
 
         requestAnimationFrame(frame);
     }
     frame();
 
-    // Load the sound file from WordPress settings
-    let scrollSound = null;
+    // ── Sound pool for smooth overlapping playback ────────
+    const SOUND_DURATION = 200;          // 0.2s in ms
+    const MIN_COOLDOWN = 80;             // fastest repetition (very fast scroll)
+    const MAX_COOLDOWN = 300;            // slowest repetition (gentle scroll)
+    const POOL_SIZE = 4;
+    let soundPool = [];
+    let soundIndex = 0;
+    let lastSoundTime = 0;
+
     if (typeof horizontalTimelineData !== 'undefined' && horizontalTimelineData.soundUrl) {
-        scrollSound = new Audio(horizontalTimelineData.soundUrl);
+        for (let i = 0; i < POOL_SIZE; i++) {
+            const a = new Audio(horizontalTimelineData.soundUrl);
+            a.volume = 0;
+            soundPool.push(a);
+        }
+    }
+
+    function playScrollSound(speed) {
+        if (soundPool.length === 0) return;
+        const now = Date.now();
+
+        // Map speed to cooldown: faster movement → shorter cooldown
+        const absSpeed = Math.abs(speed);
+        const t = Math.min(1, absSpeed / 100);  // normalize: 0 = still, 1 = fast
+        const cooldown = MAX_COOLDOWN - t * (MAX_COOLDOWN - MIN_COOLDOWN);
+
+        if (now - lastSoundTime < cooldown) return;
+
+        const snd = soundPool[soundIndex % POOL_SIZE];
+        snd.volume = 1;
+        snd.currentTime = 0;
+        snd.play().catch(() => {});
+        soundIndex++;
+        lastSoundTime = now;
     }
 
     // Mouse wheel scroll: move timeline horizontally when in viewport
     wrapper.addEventListener('wheel', (e) => {
         if (!isInViewport) return;
 
-        // Play the sound if available
-        if (scrollSound) {
-            scrollSound.currentTime = 0; // Reset to the start
-            scrollSound.play().catch(() => {}); // Ignore errors if autoplay is blocked
-        }
-
-        // Only scroll horizontally
+        let scrollDelta = 0;
         if (Math.abs(e.deltaY) > Math.abs(e.deltaX)) {
             e.preventDefault();
-            state.target -= e.deltaY * 1.2; // Adjust multiplier for sensitivity
+            scrollDelta = e.deltaY;
+            state.target -= scrollDelta * 1.2;
         } else if (e.deltaX !== 0) {
             e.preventDefault();
-            state.target -= e.deltaX * 1.2;
+            scrollDelta = e.deltaX;
+            state.target -= scrollDelta * 1.2;
         }
+
+        if (Math.abs(scrollDelta) > 2) playScrollSound(scrollDelta);
     }, { passive: false });
 });
