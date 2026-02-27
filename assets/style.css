@@ -33,7 +33,7 @@
 }
 
 .horizontal-timeline-bkg-lines{
-    background-image: repeating-linear-gradient(to right,#666 0px, #666 1px, transparent 1px, transparent 10px);
+    background-image: repeating-linear-gradient(to right,#666 0px, #666 1px, transparent 1px, transparent 15px);
     height: 20px;
     width: 100%;
     display: block;
